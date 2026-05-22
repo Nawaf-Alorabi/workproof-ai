@@ -89,3 +89,4 @@ The app automatically creates demo records if the database is empty:
 - Improve reports and export to PDF/CSV
 - Replace mock AI summary with real AI generation
 - Add role-based permissions
+- 
