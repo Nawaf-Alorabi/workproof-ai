@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WorkProof AI
+
+WorkProof AI is a Stage 1 prototype for onboarding and task tracking. It lets a manager assign tasks, an employee track work sessions and evidence, and both sides review manager recommendations/history and final reports.
+
+## Tech Stack
+
+- Next.js App Router
+- TypeScript
+- Tailwind CSS
+- Prisma
+- SQLite
+
+## Features Completed
+
+- Manager dashboard
+- Employee dashboard
+- Task assignment
+- Task detail page
+- Work session timer
+- 50-minute break reminder
+- Progress notes
+- Proof links
+- Submit for review
+- Manager approve/request changes
+- Recommendation history
+- Final task report
+- Automatic demo data creation when the database is empty
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create your local environment file:
+
+```bash
+copy .env.example .env
+```
+
+Create the local SQLite database and generate Prisma client:
+
+```bash
+npm run db:push
+npm run db:generate
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+If port `3000` keeps running after closing the terminal:
 
-## Learn More
+```bash
+npm run stop
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Demo Data
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app automatically creates demo records if the database is empty:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Manager: `manager@workproof.ai`
+- Employee: `employee@workproof.ai`
+- One onboarding checklist task
 
-## Deploy on Vercel
+## Main Routes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- `/`
+- `/manager`
+- `/employee`
+- `/tasks/[id]`
+- `/tasks/[id]/review`
+- `/tasks/[id]/report`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Next Steps
+
+- Add real authentication
+- Add task edit/delete/filtering
+- Improve reports and export to PDF/CSV
+- Replace mock AI summary with real AI generation
+- Add role-based permissions
