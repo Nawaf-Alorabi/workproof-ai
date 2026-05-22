@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  MANAGER
+  EMPLOYEE
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  SUBMITTED
+  CHANGES_REQUESTED
+  APPROVED
+}
+
+model User {
+  id             Int            @id @default(autoincrement())
+  name           String
+  email          String         @unique
+  role           Role
+  managedTasks   Task[]         @relation("TaskManager")
+  assignedTasks  Task[]         @relation("TaskAssignee")
+  workSessions   WorkSession[]
+  progressNotes  ProgressNote[]
+  proofItems     ProofItem[]
+  recommendations Recommendation[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+model Task {
+  id              Int            @id @default(autoincrement())
+  title           String
+  description     String
+  status          TaskStatus     @default(TODO)
+  managerId       Int
+  assigneeId      Int
+  dueDate         DateTime?
+  submittedAt     DateTime?
+  reviewedAt      DateTime?
+  recommendation  String?
+  aiSummary       String?
+  manager         User           @relation("TaskManager", fields: [managerId], references: [id])
+  assignee        User           @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  sessions        WorkSession[]
+  progressNotes   ProgressNote[]
+  proofItems      ProofItem[]
+  recommendations Recommendation[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model WorkSession {
+  id              Int       @id @default(autoincrement())
+  taskId          Int
+  employeeId      Int
+  startTime       DateTime  @default(now())
+  endTime         DateTime?
+  durationSeconds Int       @default(0)
+  task            Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  employee        User      @relation(fields: [employeeId], references: [id])
+  createdAt       DateTime  @default(now())
+}
+
+model ProgressNote {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  authorId  Int
+  content   String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model ProofItem {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  authorId  Int
+  label     String
+  url       String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Recommendation {
+  id        Int      @id @default(autoincrement())
+  taskId    Int
+  managerId Int
+  decision  String
+  content   String
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  manager   User     @relation(fields: [managerId], references: [id])
+  createdAt DateTime @default(now())
+}
